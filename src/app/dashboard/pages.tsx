@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -13,12 +14,15 @@ export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    // This effect runs only on the client, after the component has mounted.
     const changes: Record<string, number> = {};
     availableCryptos.forEach(crypto => {
+      // Generate random data only on the client
       changes[crypto.symbol] = (Math.random() - 0.45) * 5;
     });
     setMarketChanges(changes);
+    // Set isClient to true to trigger a re-render with the client-side data
+    setIsClient(true);
   }, [availableCryptos]);
 
   return (
