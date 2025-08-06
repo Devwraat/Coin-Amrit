@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
@@ -40,19 +41,26 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [fiatBalance, setFiatBalance] = useState(10000);
   const [portfolio, setPortfolio] = useState<PortfolioAsset[]>([]);
   const [availableCryptos, setAvailableCryptos] = useState(initialCryptos);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setAvailableCryptos((prevCryptos) =>
-        prevCryptos.map((crypto) => ({
-          ...crypto,
-          price: crypto.price * (1 + (Math.random() - 0.5) * 0.01), // Simulate small price fluctuations
-        }))
-      );
-    }, 5000); // Update every 5 seconds
-
-    return () => clearInterval(interval);
+    setIsClient(true);
   }, []);
+  
+  useEffect(() => {
+    if (isClient) {
+      const interval = setInterval(() => {
+        setAvailableCryptos((prevCryptos) =>
+          prevCryptos.map((crypto) => ({
+            ...crypto,
+            price: crypto.price * (1 + (Math.random() - 0.5) * 0.01), // Simulate small price fluctuations
+          }))
+        );
+      }, 5000); // Update every 5 seconds
+  
+      return () => clearInterval(interval);
+    }
+  }, [isClient]);
 
   useEffect(() => {
     setPortfolio(prevPortfolio => {
@@ -71,7 +79,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [portfolio]);
 
   const depositFiat = (amount: number) => {
-    setFiatBalance((prev) => prev + amount);
+    if (amount > 0) {
+        setFiatBalance((prev) => prev + amount);
+    }
   };
 
   const buyCrypto = (symbol: string, usdAmount: number) => {
@@ -112,6 +122,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const asset = portfolio.find((a) => a.symbol === symbol);
     if (!asset || asset.amount < amount) {
       throw new Error('Insufficient crypto balance.');
+    }
+    if (amount <= 0) {
+        throw new Error('Send amount must be positive.');
     }
     
     console.log(`Sending ${amount} ${symbol} to ${recipientAddress}`);
