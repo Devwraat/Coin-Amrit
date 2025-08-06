@@ -103,7 +103,7 @@ export default function DashboardPage() {
                         </TableCell>
                         <TableCell>${crypto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                         <TableCell className="text-right">
-                        <span className={`flex items-center justify-end ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                        <span className={flex items-center justify-end ${isPositive ? 'text-green-500' : 'text-red-500'}}>
                             {isPositive ? <TrendingUp className="h-4 w-4 mr-1" /> : <TrendingDown className="h-4 w-4 mr-1" />}
                             {change.toFixed(2)}%
                         </span>
