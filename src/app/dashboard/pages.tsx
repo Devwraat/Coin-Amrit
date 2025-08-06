@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const { fiatBalance, portfolioValue, availableCryptos } = useAppContext();
-  const [marketChanges, setMarketChanges] = useState<Record<string, number> | null>(null);
+  const [marketChanges, setMarketChanges] = useState<Record<string, number>>({});
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function DashboardPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!isClient || !marketChanges ? (
+              {!isClient ? (
                  availableCryptos.map((crypto) => (
                     <TableRow key={crypto.symbol}>
                         <TableCell>
